@@ -7,6 +7,8 @@ import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ServerThread extends Thread{
     private static Logger _logger = Logger.getLogger(ServerThread.class.getName());
@@ -42,7 +44,18 @@ public class ServerThread extends Thread{
                 msg = _in.readUTF();
                 if(msg.isEmpty())
                     continue;
+                String command = parseMessage(msg);
+                if((command.contains("/quit")))
+                    break;
+
                 date = _dateFormat.format(new Date());
+                if(command.contains("/room")){
+                    int newRoomId = Integer.parseInt(command.split(" ")[1]);
+                    _server.broadcast(_roomId, String.format("%s %s disconnected from the room %d", date, _username, _roomId));
+                    _roomId = newRoomId;
+                    _server.broadcast(_roomId, String.format("%s %s has connected to the room %d", date, _username, _roomId));
+                    continue;
+                }
                 _server.broadcast(_roomId, String.format("%s %s> %s", date, _username, msg));
             }
         }
@@ -85,6 +98,18 @@ public class ServerThread extends Thread{
         } catch (IOException e) {
             // Not much I can do
         }
+    }
+
+    private String parseMessage(String msg){
+        if (msg == null || msg.equals(""))
+            return "";
+
+        Pattern pattern = Pattern.compile("^/((quit)|(room \\d{1,2}))");
+        Matcher matcher = pattern.matcher(msg);
+        if(matcher.find())
+            return matcher.group();
+
+        return "";
     }
 
     public DataOutputStream getWriter() {

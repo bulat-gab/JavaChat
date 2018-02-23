@@ -46,6 +46,7 @@ public class Client {
             clientThread.start();
 
             String msg = "";
+            infoMessage();
             while(!_socket.isClosed() && !"/quit".equalsIgnoreCase(msg)){
                 msg = _scanner.nextLine();
                 _out.writeUTF(msg);
@@ -58,6 +59,12 @@ public class Client {
         finally {
             stopClient();
         }
+    }
+
+    private void infoMessage() {
+        System.out.println("Welcome, " + _username + "!");
+        System.out.println("Type /quit to leave a chat.");
+        System.out.println("Type a /room #roomNo to enter change a room.\n");
     }
 
     private void connectAndChooseRoom()  {
