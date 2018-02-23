@@ -30,6 +30,14 @@ public class ClientThread extends Thread{
 
         } catch (IOException e) {
             _logger.warning("Error while listening from server: " + e);
+            if(_socket != null){
+                try {
+                    _socket.close();
+                } catch (IOException e1) {
+                    //
+                }
+            }
+
         }
     }
 }

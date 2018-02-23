@@ -29,7 +29,7 @@ public class Client {
         System.out.println("Enter your name: ");
         String username = sc.nextLine();
         if(!MyStringUtils.validateUsername(username)){
-            System.out.println("Username name must not be empty or longer than 10 symbols");
+            System.out.println("Username name must not be empty, longer than 10 symbols and contain only #numbers and English symbols");
             return;
         }
 
@@ -46,7 +46,7 @@ public class Client {
             clientThread.start();
 
             String msg = "";
-            infoMessage();
+            greetingsMessage();
             while(!_socket.isClosed() && !"/quit".equalsIgnoreCase(msg)){
                 msg = _scanner.nextLine();
                 _out.writeUTF(msg);
@@ -61,7 +61,7 @@ public class Client {
         }
     }
 
-    private void infoMessage() {
+    private void greetingsMessage() {
         System.out.println("Welcome, " + _username + "!");
         System.out.println("Type /quit to leave a chat.");
         System.out.println("Type a /room #roomNo to enter change a room.\n");
@@ -103,6 +103,9 @@ public class Client {
         }
         catch (IOException e){
             // Not much I can do
+        }
+        finally {
+            _logger.info("Stopping the client...");
         }
     }
 }

@@ -1,9 +1,9 @@
 package main.utils;
 
 public class MyStringUtils {
+    public static final String USERNAME_PATTERN = "[a-zA-Z0-9]{1,10}";
+
     public static boolean validateUsername(String username) {
-        if(username == null || username.equals("") || username.length() > 10)
-            return false;
-        return true;
+        return username != null && username.matches(USERNAME_PATTERN);
     }
 }

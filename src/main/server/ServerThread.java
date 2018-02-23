@@ -63,7 +63,7 @@ public class ServerThread extends Thread{
            // Not much I can do
         }
         finally {
-            close();
+            stopThread();
             String date = _dateFormat.format(new Date());
             _server.broadcast(_roomId, String.format("%s %s disconnected", date, _username));
         }
@@ -90,7 +90,7 @@ public class ServerThread extends Thread{
         return true;
     }
 
-    private void close(){
+    public void stopThread(){
         try {
             _out.close();
             _in.close();
